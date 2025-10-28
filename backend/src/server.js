@@ -5,6 +5,7 @@ const cors = require("cors");
 const { clerkMiddleware } = require("@clerk/express");
 const userRouter = require("./routes/userRouter");
 const postRouter = require("./routes/post.route");
+const commentRouter = require("./routes/comment.route");
 
 const app = express();
 
@@ -23,6 +24,9 @@ app.use("/api/users", userRouter);
 
 //post routes
 app.use("/api/posts", postRouter);
+
+//comment routes
+app.use("/api/comments", commentRouter);
 
 (async () => {
   try {
