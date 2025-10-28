@@ -1,15 +1,24 @@
 const express = require("express");
 const ENV_VARIABLES = require("./config/env");
 const connectToDatabase = require("./config/dbConfig");
+const cors = require("cors");
+const { clerkMiddleware } = require("@clerk/express");
+const userRouter = require("./routes/userRouter");
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
+
+app.use(clerkMiddleware());
 
 // Define a simple route for testing
 app.get("/", (req, res) => {
   res.send("API Health is Good! ✅ All Systems Operational. 🧠");
 });
+
+//user routes
+app.use("/api/users", userRouter);
 
 (async () => {
   try {
