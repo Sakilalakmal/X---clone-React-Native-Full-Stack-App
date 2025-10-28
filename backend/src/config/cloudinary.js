@@ -1,8 +1,7 @@
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
-const { cloudinaryStorage } = require("multer-storage-cloudinary");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const ENV_VARIABLES = require("./env");
-const { param } = require("../routes/post.route");
 
 //configure cloudinary
 cloudinary.config({
@@ -12,7 +11,7 @@ cloudinary.config({
 });
 
 //configure multer storage cloudinary
-const storage = new cloudinaryStorage({
+const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "X_Clone",

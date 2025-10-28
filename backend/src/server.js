@@ -6,13 +6,19 @@ const { clerkMiddleware } = require("@clerk/express");
 const userRouter = require("./routes/userRouter");
 const postRouter = require("./routes/post.route");
 const commentRouter = require("./routes/comment.route");
+const notificationRouter = require("./routes/notification.route");
+const arcjetMiddleware = require("./middlewares/arcjet");
 
 const app = express();
+
+process.setMaxListeners(0);
+process.setMaxListeners(20);
 
 app.use(cors());
 app.use(express.json());
 
 app.use(clerkMiddleware());
+app.use(arcjetMiddleware);
 
 // Define a simple route for testing
 app.get("/", (req, res) => {
@@ -27,6 +33,9 @@ app.use("/api/posts", postRouter);
 
 //comment routes
 app.use("/api/comments", commentRouter);
+
+//notification routes
+app.use("/api/notifications", notificationRouter);
 
 (async () => {
   try {
