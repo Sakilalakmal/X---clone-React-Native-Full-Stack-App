@@ -4,6 +4,7 @@ const connectToDatabase = require("./config/dbConfig");
 const cors = require("cors");
 const { clerkMiddleware } = require("@clerk/express");
 const userRouter = require("./routes/userRouter");
+const postRouter = require("./routes/post.route");
 
 const app = express();
 
@@ -19,6 +20,9 @@ app.get("/", (req, res) => {
 
 //user routes
 app.use("/api/users", userRouter);
+
+//post routes
+app.use("/api/posts", postRouter);
 
 (async () => {
   try {
