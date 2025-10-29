@@ -40,13 +40,18 @@ app.use("/api/notifications", notificationRouter);
 (async () => {
   try {
     await connectToDatabase();
-    app.listen(ENV_VARIABLES.PORT, () => {
-      console.log(
-        `Server is running on port http://localhost:${ENV_VARIABLES.PORT}`
-      );
-    });
+    if (ENV_VARIABLES.NODE_ENV !== "production") {
+      app.listen(ENV_VARIABLES.PORT, () => {
+        console.log(
+          `Server is running on port http://localhost:${ENV_VARIABLES.PORT}`
+        );
+      });
+    }
   } catch (error) {
     console.error("Failed to start server:", error);
     process.exit(1);
   }
 })();
+
+//export for vercel
+module.exports = app;
