@@ -11,7 +11,7 @@ const arcjetMiddleware = require("./middlewares/arcjet");
 
 const app = express();
 
-process.setMaxListeners(0);
+// Fix: Only set once
 process.setMaxListeners(20);
 
 app.use(cors());
