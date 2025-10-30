@@ -18,11 +18,18 @@ app.use(cors());
 app.use(express.json());
 
 app.use(clerkMiddleware());
-app.use(arcjetMiddleware);
 
 // Define a simple route for testing
 app.get("/", (req, res) => {
   res.send("API Health is Good! ✅ All Systems Operational. 🧠");
+});
+
+// Apply Arcjet middleware selectively - exclude sync endpoint
+app.use((req, res, next) => {
+  if (req.path === "/api/users/sync") {
+    return next(); // Skip Arcjet for sync endpoint
+  }
+  return arcjetMiddleware(req, res, next);
 });
 
 //user routes

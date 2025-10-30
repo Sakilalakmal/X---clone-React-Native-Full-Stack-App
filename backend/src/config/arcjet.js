@@ -7,17 +7,17 @@ const aj = arcjet({
   key: ENV_VARIABLES.ARCJET_KEY,
   characteristics: ["ip.src"],
   rules: [
-    shield({ mode: "LIVE" }), // for secure app from attacks
+    shield({ mode: ENV_VARIABLES.NODE_ENV === "production" ? "LIVE" : "DRY_RUN" }), // for secure app from attacks
     detectBot({
-      mode: "LIVE",
-      allow: ["CATEGORY:SEARCH_ENGINE"],
+      mode: ENV_VARIABLES.NODE_ENV === "production" ? "LIVE" : "DRY_RUN",
+      allow: ["CATEGORY:SEARCH_ENGINE", "CATEGORY:PREVIEW"],
     }),
 
     tokenBucket({
-      mode: "LIVE",
-      refillRate: 10,
+      mode: ENV_VARIABLES.NODE_ENV === "production" ? "LIVE" : "DRY_RUN",
+      refillRate: 20, // Increased for development
       interval: 10,
-      capacity: 15,
+      capacity: 30, // Increased for development
     }),
   ],
 });

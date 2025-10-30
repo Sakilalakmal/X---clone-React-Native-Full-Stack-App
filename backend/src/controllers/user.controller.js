@@ -36,6 +36,8 @@ const userControllers = {
   }),
 
   syncUser: AsyncHandler(async (req, res) => {
+    console.log("Sync user request received for userId:", req.auth?.userId);
+    
     const { userId } = getAuth(req);
 
     // Check if user already exists
@@ -43,7 +45,7 @@ const userControllers = {
 
     if (existingUser) {
       return res
-        .status(500)
+        .status(200) // Changed from 500 to 200
         .json({ message: "User already exists", user: existingUser });
     }
 
