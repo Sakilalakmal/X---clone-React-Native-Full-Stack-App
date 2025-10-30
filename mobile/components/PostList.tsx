@@ -1,9 +1,10 @@
 import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { usePosts } from "@/hooks/usePosts";
 import { Post } from "@/types";
 import PostCard from "./PostCard";
+import CommentsModel from "./CommentsModel";
 
 const PostList = () => {
   const { currentUser } = useCurrentUser();
@@ -17,6 +18,11 @@ const PostList = () => {
     checkIsLiked,
   } = usePosts();
 
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+
+  const selectedPost = selectedPostId
+    ? posts.find((p: Post) => p._id === selectedPostId)
+    : null;
   if (isLoading) {
     return (
       <View className="p-8 items-center">
@@ -56,11 +62,17 @@ const PostList = () => {
           key={post._id}
           post={post}
           onLike={toggleLike}
+          onComment={(post: Post) => setSelectedPostId(post._id)}
           onDelete={deletePost}
           currentUser={currentUser}
           isLiked={checkIsLiked(post.likes, currentUser)}
         />
       ))}
+
+      <CommentsModel
+        selectedPost={selectedPost}
+        onClose={() => setSelectedPostId(null)}
+      />
     </>
   );
 };

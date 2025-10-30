@@ -14,7 +14,7 @@ commentRouter.get("/post/:postId", getCommentForPost);
 
 //private route
 
-commentRouter.get("/create/post/:postId", isAuth, createCommentForPost);
+commentRouter.post("/create/post/:postId", isAuth, createCommentForPost);
 
 commentRouter.delete("/:commentId", isAuth, deleteComment);
 
