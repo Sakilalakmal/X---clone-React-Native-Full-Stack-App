@@ -16,10 +16,16 @@ const storage = new CloudinaryStorage({
   params: {
     folder: "X_Clone",
     format: async (req, file) => {
-      "png";
+      // Extract format from file mimetype or default to 'png'
+      const format = file.mimetype.split('/')[1];
+      return ['jpeg', 'jpg', 'png', 'gif', 'webp'].includes(format) ? format : 'png';
     },
-    public_id: (req, file) => file.filename + "_" + Date.now(),
-    transformation: [{ width: 500, height: 500, crop: "fill" }],
+    public_id: (req, file) => {
+      const timestamp = Date.now();
+      const originalname = file.originalname ? file.originalname.split('.')[0] : 'image';
+      return `${originalname}_${timestamp}`;
+    },
+    transformation: [{ width: 800, height: 600, crop: "limit", quality: "auto" }],
   },
 });
 

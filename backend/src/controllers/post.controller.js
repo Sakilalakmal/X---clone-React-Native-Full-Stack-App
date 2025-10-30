@@ -61,11 +61,21 @@ const postControllers = {
   }),
 
   createPost: AsyncHandler(async (req, res) => {
+    console.log("=== CREATE POST REQUEST ===");
+    console.log("Request body:", req.body);
+    console.log("Request file:", req.file);
+    console.log("Request headers:", req.headers);
+    
     const { userId } = getAuth(req);
     const { content } = req.body;
     const imageFile = req.file;
 
+    console.log("User ID from auth:", userId);
+    console.log("Content:", content);
+    console.log("Image file details:", imageFile);
+
     if (!content && !imageFile) {
+      console.log("❌ No content or image provided");
       return res
         .status(400)
         .json({ message: "Post content or image is required" });
@@ -73,12 +83,16 @@ const postControllers = {
 
     const user = await User.findOne({ clerkId: userId });
     if (!user) {
+      console.log("❌ User not found for clerkId:", userId);
       return res
         .status(404)
         .json({ message: "Please register to create a post..." });
     }
 
+    console.log("✅ User found:", user.username);
+
     const image = req.file ? req.file.path : null;
+    console.log("Image path from Cloudinary:", image);
 
     const newPost = new Post({
       user: user._id,
@@ -87,6 +101,12 @@ const postControllers = {
     });
 
     await newPost.save();
+    console.log("✅ Post saved to database");
+
+    // Populate the user data before sending response
+    await newPost.populate("user", "username firstName lastName profileImage");
+
+    console.log("✅ Post created successfully with image:", newPost.image);
 
     res
       .status(201)
