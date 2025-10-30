@@ -27,9 +27,19 @@ app.get("/", (req, res) => {
 
 // Apply Arcjet middleware selectively - exclude sync endpoint
 app.use((req, res, next) => {
-  if (req.path === "/api/users/sync") {
-    return next(); // Skip Arcjet for sync endpoint
+  // Skip Arcjet for these endpoints in development
+  const skipArcjetPaths = [
+    "/api/users/sync",
+    "/api/comments/"
+  ];
+  
+  // Check if any of the skip paths match the beginning of the request path
+  const shouldSkipArcjet = skipArcjetPaths.some(path => req.path.startsWith(path));
+  
+  if (shouldSkipArcjet) {
+    return next(); // Skip Arcjet for these endpoints
   }
+  
   return arcjetMiddleware(req, res, next);
 });
 
@@ -40,7 +50,10 @@ app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
 
 //comment routes
-app.use("/api/comments", commentRouter);
+app.use("/api/comments", (req, res, next) => {
+  console.log(`📝 Comment Route: ${req.method} ${req.originalUrl}`);
+  next();
+}, commentRouter);
 
 //notification routes
 app.use("/api/notifications", notificationRouter);
