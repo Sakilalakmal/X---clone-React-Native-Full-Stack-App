@@ -6,7 +6,7 @@ import { Post } from "@/types";
 import PostCard from "./PostCard";
 import CommentsModel from "./CommentsModel";
 
-const PostList = () => {
+const PostList = ({ username }: { username?: string }) => {
   const { currentUser } = useCurrentUser();
   const {
     posts,
@@ -16,7 +16,7 @@ const PostList = () => {
     toggleLike,
     deletePost,
     checkIsLiked,
-  } = usePosts();
+  } = usePosts(username);
 
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
