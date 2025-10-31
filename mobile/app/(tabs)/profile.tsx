@@ -5,6 +5,7 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import React from "react";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
@@ -17,6 +18,8 @@ import { Feather } from "@expo/vector-icons";
 import { formatDate } from "@/utils/formatters";
 import { usePosts } from "@/hooks/usePosts";
 import PostList from "@/components/PostList";
+import { useProfile } from "@/hooks/usePofile";
+import EditProfileModal from "@/components/EditProfileModal";
 
 const ProfileScreen = () => {
   const { currentUser, isLoading } = useCurrentUser();
@@ -27,6 +30,17 @@ const ProfileScreen = () => {
     refetch: refetchPosts,
     isLoading: isRefetching,
   } = usePosts(currentUser?.username);
+
+  const {
+    isEditModalVisible,
+    formData,
+    openEditModal,
+    closeEditModal,
+    updateFormFeild,
+    updateProfile,
+    isUpdating,
+    refetch,
+  } = useProfile();
 
   if (isLoading) {
     return (
@@ -61,6 +75,17 @@ const ProfileScreen = () => {
         className="flex-1"
         contentContainerStyle={{ paddingBottom: 100 + insets.bottom }}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetching}
+            onRefresh={() => {
+              refetch();
+              refetchPosts();
+            }}
+            colors={["#1DA1F2"]}
+            tintColor="#1dA1F2"
+          />
+        }
       >
         <Image
           source={{
@@ -80,7 +105,10 @@ const ProfileScreen = () => {
               }}
               className="w-32 h-32 rounded-full border-4 border-white"
             />
-            <TouchableOpacity className="border border-gray-300 px-6 py-2 rounded-full">
+            <TouchableOpacity
+              className="border border-gray-300 px-6 py-2 rounded-full"
+              onPress={() => openEditModal()}
+            >
               <Text className="font-semibold text-gray-900">Edit profile</Text>
             </TouchableOpacity>
           </View>
@@ -128,6 +156,15 @@ const ProfileScreen = () => {
         </View>
         <PostList username={currentUser?.username} />
       </ScrollView>
+
+      <EditProfileModal
+        isVisible={isEditModalVisible}
+        formData={formData}
+        onClose={closeEditModal}
+        onChangeField={updateFormFeild}
+        onSubmit={updateProfile}
+        isUpdating={isUpdating}
+      />
     </SafeAreaView>
   );
 };
