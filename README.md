@@ -1,6 +1,5 @@
 <img width="1475" height="675" alt="x-clone" src="https://github.com/user-attachments/assets/8e50570a-7e11-4baf-a315-854f78b9a775" />
 
-
 # X-Clone (Full Stack Social App)
 
 An advanced, full-stack social media application built with **React Native (Expo)**, **Node.js**, **Express**, and **MongoDB**. Designed to replicate the core experience of X (formerly Twitter), featuring real-time updates, secure authentication, media sharing, and a responsive mobile interface.
