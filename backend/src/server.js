@@ -28,18 +28,17 @@ app.get("/", (req, res) => {
 // Apply Arcjet middleware selectively - exclude sync endpoint
 app.use((req, res, next) => {
   // Skip Arcjet for these endpoints in development
-  const skipArcjetPaths = [
-    "/api/users/sync",
-    "/api/comments/"
-  ];
-  
+  const skipArcjetPaths = ["/api/users/sync", "/api/comments/"];
+
   // Check if any of the skip paths match the beginning of the request path
-  const shouldSkipArcjet = skipArcjetPaths.some(path => req.path.startsWith(path));
-  
+  const shouldSkipArcjet = skipArcjetPaths.some((path) =>
+    req.path.startsWith(path)
+  );
+
   if (shouldSkipArcjet) {
     return next(); // Skip Arcjet for these endpoints
   }
-  
+
   return arcjetMiddleware(req, res, next);
 });
 
@@ -50,10 +49,14 @@ app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
 
 //comment routes
-app.use("/api/comments", (req, res, next) => {
-  console.log(`📝 Comment Route: ${req.method} ${req.originalUrl}`);
-  next();
-}, commentRouter);
+app.use(
+  "/api/comments",
+  (req, res, next) => {
+    console.log(`📝 Comment Route: ${req.method} ${req.originalUrl}`);
+    next();
+  },
+  commentRouter
+);
 
 //notification routes
 app.use("/api/notifications", notificationRouter);
@@ -62,10 +65,11 @@ app.use("/api/notifications", notificationRouter);
   try {
     await connectToDatabase();
     if (ENV_VARIABLES.NODE_ENV !== "production") {
-      app.listen(ENV_VARIABLES.PORT, () => {
-        console.log(
-          `Server is running on port http://localhost:${ENV_VARIABLES.PORT}`
-        );
+      app.listen(ENV_VARIABLES.PORT, "0.0.0.0", () => {
+        console.log(`🚀 Server is running on:`);
+        console.log(`   - Local:   http://localhost:${ENV_VARIABLES.PORT}`);
+        console.log(`   - Network: http://10.25.65.250:${ENV_VARIABLES.PORT}`);
+        console.log(`\n📱 Use the Network URL for your mobile app!`);
       });
     }
   } catch (error) {
